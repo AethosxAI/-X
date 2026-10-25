@@ -1,0 +1,78 @@
+name: "Discord Commit Webhook Notifier"
+description: "Send Discord notifications for GitHub push, pull request, and release events."
+author: "AethosxAI"
+
+inputs:
+  webhook_url:
+    description: "Discord webhook URL"
+    required: true
+  github_token:
+    description: "GitHub token for reading repo metadata"
+    required: false
+    default: ${{ github.token }}
+  event_types:
+    description: "Comma-separated event types to process: push,pull_request,release"
+    required: false
+    default: "push,pull_request,release"
+  branch_filter:
+    description: "Comma-separated branch names or glob patterns, for example main,release/*"
+    required: false
+    default: ""
+  max_commits:
+    description: "Maximum number of commit messages to include"
+    required: false
+    default: "8"
+  max_files_per_commit:
+    description: "Maximum number of changed files to show in the summary"
+    required: false
+    default: "8"
+  include_changed_files:
+    description: "Include changed files in the notification"
+    required: false
+    default: "true"
+  username:
+    description: "Discord username override"
+    required: false
+    default: "GitHub Actions"
+  avatar_url:
+    description: "Discord avatar URL override"
+    required: false
+    default: ""
+  color:
+    description: "Embed border color in hex format, e.g. 00B894"
+    required: false
+    default: "00B894"
+  retry_count:
+    description: "Transient retry count for Discord webhook failures"
+    required: false
+    default: "3"
+  retry_backoff_ms:
+    description: "Backoff delay in milliseconds between retries"
+    required: false
+    default: "1000"
+  fail_on_webhook_error:
+    description: "Fail the workflow if the Discord webhook request fails"
+    required: false
+    default: "false"
+  message_template:
+    description: "Optional template for the summary string"
+    required: false
+    default: ""
+
+outputs:
+  status:
+    description: "Final status"
+  event_type:
+    description: "The GitHub event type processed"
+  repository:
+    description: "Repository full name"
+  branch:
+    description: "Branch or ref name"
+  commit_count:
+    description: "Number of commits included in the notification"
+  sent:
+    description: "Whether the webhook was successfully sent"
+
+runs:
+  using: node20
+  main: src/index.js
